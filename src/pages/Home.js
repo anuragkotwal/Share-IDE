@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
-import { v4 as uuidV4 } from 'uuid';
-import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import "../TailwindCSS/output.css";
+import { useNavigate } from "react-router-dom";
+import shareIDE from "../../src/shareIDE.svg";
 
 const Home = () => {
   const navigate = useNavigate();
 
-    const [roomId, setRoomId] = useState('');
-    const [username, setUsername] = useState('');
-    const createNewRoom = (e) => {
-        e.preventDefault();
-        const id = uuidV4();
-        setRoomId(id);
-        toast.success('Created a new room');
-    };
+  const [roomId, setRoomId] = useState("");
+  const [username, setUsername] = useState("");
+  const createNewRoom = (e) => {
+    e.preventDefault();
+    const id = Math.random().toString(36).substring(2, 7);
+    setRoomId(id);
+    toast.success("Created a new room");
+  };
 
   const joinRoom = () => {
     if (!roomId || !username) {
