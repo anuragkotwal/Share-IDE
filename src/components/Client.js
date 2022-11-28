@@ -4,8 +4,8 @@ import Avatar from 'react-avatar';
 const Client = ({ username }) => {
     return (
         <div className="client">
-            <Avatar name={username} size={50} round="14px" />
-            <span className="userName">{username}</span>
+            <Avatar name={username} size={44} round="6px" />
+            <span className="userName text-sm">{username}</span>
         </div>
     );
 };

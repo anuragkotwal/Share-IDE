@@ -12,7 +12,7 @@ const Home = () => {
             <div className='mt-6 text-center font-light text-lg text-[#d9dadb]'>An online code editor for interview, troubleshooting, teaching & more…</div>
 
             <Link to={"/access"} className="flex">
-                <button className='text-white bg-[#ec3360] h-12 w-36 mx-auto rounded-md mt-14 '>Access Now</button>
+                <button className='text-white bg-[#ec3360] hover:bg-[#c31944] transition-all duration-300 h-12 w-36 mx-auto rounded-md mt-14 '>Access Now</button>
             </Link>
 
             <div className=' m-auto text-white font-medium text-4xl pt-8'>
