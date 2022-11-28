@@ -4,6 +4,8 @@ import ACTIONS from '../Actions';
 import Client from '../components/Client';
 import Editor from '../components/Editor';
 import { initSocket } from '../socket';
+import "../TailwindCSS/output.css";
+import shareIDE from "../../src/shareIDE.svg";
 import {
     useLocation,
     useNavigate,
@@ -95,11 +97,12 @@ const EditorPage = () => {
         <div className="mainWrap">
             <div className="aside">
                 <div className="asideInner">
-                    <div className="logo">
-                        
-                        <h1>Share IDE</h1>
+                    <div className="logo flex">
+                        <div className=' self-center text-white font-medium text-2xl mx-auto'>
+                            <img className='h-6 inline-block -mt-2' src={shareIDE} alt="" /> ShareIDE
+                        </div>
                     </div>
-                    <h3>Connected</h3>
+                    <h3 className='mt-1 mb-2 font-medium text-base'>Connected</h3>
                     <div className="clientsList">
                         {clients.map((client) => (
                             <Client
@@ -109,8 +112,9 @@ const EditorPage = () => {
                         ))}
                     </div>
                 </div>
-                <button className="btn copyBtn" onClick={copyRoomId}>
-                    Copy ROOM ID
+
+                <button className="font-medium hover:text-[#ec3360] transition-all duration-300" onClick={copyRoomId}>
+                    Copy Room Id
                 </button>
                 <button className="btn leaveBtn" onClick={leaveRoom}>
                     Leave
