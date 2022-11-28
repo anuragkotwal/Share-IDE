@@ -17,6 +17,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                 {
                     mode: { name: 'javascript', json: true },
                     autoCloseTags: true,
+                    theme: 'dracula',
                     autoCloseBrackets: true,
                     lineNumbers: true,
                 }
