@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef } from 'react';
 import Codemirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
@@ -16,6 +17,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                 {
                     mode: { name: 'javascript', json: true },
                     autoCloseTags: true,
+                    theme: 'dracula',
                     autoCloseBrackets: true,
                     lineNumbers: true,
                 }
