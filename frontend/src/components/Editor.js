@@ -1,58 +1,85 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef } from 'react';
-import Codemirror from 'codemirror';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/dracula.css';
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/addon/edit/closetag';
-import 'codemirror/addon/edit/closebrackets';
-import ACTIONS from '../Actions';
+import React, { useEffect, useRef } from "react";
+import Codemirror from "codemirror";
+import "codemirror/lib/codemirror.css";
+import "codemirror/theme/dracula.css";
+import "codemirror/mode/javascript/javascript";
+import "codemirror/addon/edit/closetag";
+import "codemirror/addon/edit/closebrackets";
+import axios from "axios";
+import ACTIONS from "../Actions";
 
-const Editor = ({ socketRef, roomId, onCodeChange }) => {
-    const editorRef = useRef(null);
-    useEffect(() => {
-        async function init() {
-            editorRef.current = Codemirror.fromTextArea(
-                document.getElementById('realtimeEditor'),
-                {
-                    mode: { name: 'javascript', json: true },
-                    autoCloseTags: true,
-                    theme: 'dracula',
-                    autoCloseBrackets: true,
-                    lineNumbers: true,
-                }
-            );
+const Editor = ({ socketRef, roomId, username, onCodeChange }) => {
+  const editorRef = useRef(null);
+  let writePerm = false;
 
-            editorRef.current.on('change', (instance, changes) => {
-                const { origin } = changes;
-                const code = instance.getValue();
-                onCodeChange(code);
-                if (origin !== 'setValue') {
-                    socketRef.current.emit(ACTIONS.CODE_CHANGE, {
-                        roomId,
-                        code,
-                    });
-                }
-            });
+  const writePermission = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/api/v1/user/getusers`,
+      {
+        params: {
+          roomId: roomId,
+          username: username,
+        },
+      }
+    );
+    if (response.data.success) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps, array-callback-return
+      response.data.data.map((user) => {
+        if (user.role === "0") {
+          writePerm = true;
         }
-        init();
-    }, []);
+      });
+    }
+    console.log(writePerm);
+    return writePerm;
+  };
 
-    useEffect(() => {
-        if (socketRef.current) {
-            socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
-                if (code !== null) {
-                    editorRef.current.setValue(code);
-                }
-            });
+  useEffect(() => {
+    async function init() {
+      writePermission();
+      editorRef.current = Codemirror.fromTextArea(
+        document.getElementById("realtimeEditor"),
+        {
+          mode: { name: "javascript", json: true },
+          autoCloseTags: true,
+          theme: "dracula",
+          autoCloseBrackets: true,
+          lineNumbers: true,
+          readOnly: !writePerm,
         }
+      );
 
-        return () => {
-            socketRef.current.off(ACTIONS.CODE_CHANGE);
-        };
-    }, [socketRef.current]);
+      editorRef.current.on("change", (instance, changes) => {
+        const { origin } = changes;
+        const code = instance.getValue();
+        onCodeChange(code);
+        if (origin !== "setValue") {
+          socketRef.current.emit(ACTIONS.CODE_CHANGE, {
+            roomId,
+            code,
+          });
+        }
+      });
+    }
+    init();
+  }, []);
 
-    return <textarea id="realtimeEditor"></textarea>;
+  useEffect(() => {
+    if (socketRef.current) {
+      socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
+        if (code !== null) {
+          editorRef.current.setValue(code);
+        }
+      });
+    }
+
+    return () => {
+      socketRef.current.off(ACTIONS.CODE_CHANGE);
+    };
+  }, [socketRef.current]);
+
+  return <textarea id="realtimeEditor"></textarea>;
 };
 
 export default Editor;

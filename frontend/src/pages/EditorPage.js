@@ -37,7 +37,6 @@ const EditorPage = () => {
                 roomId,
                 username: location.state?.username,
             });
-
             // Listening for joined event
             socketRef.current.on(
                 ACTIONS.JOINED,
@@ -125,6 +124,7 @@ const EditorPage = () => {
                 <Editor
                     socketRef={socketRef}
                     roomId={roomId}
+                    username={location.state?.username}
                     onCodeChange={(code) => {
                         codeRef.current = code;
                     }}
