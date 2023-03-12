@@ -12,17 +12,7 @@ const createUser = async (body) => {
     }
 }
 
-const countUserWithUsername = async (query) => {
-    try {
-        const count = await User.countDocuments(query)
-        return count
-    } catch (err) {
-        logger.error(`Error in counting user - ${JSON.stringify(query)}`, err)
-        return { err }
-    }
-}
-
-const findUser = async (query) => {
+const findRoom = async (query) => {
     try {
         const user = await User.findOne(query).lean()
         if (user) return user
@@ -47,4 +37,4 @@ const updateUser = async (query, body) => {
     }
 }
 
-module.exports = { createUser, findUser, countUserWithUsername, updateUser }
+module.exports = { createUser, findRoom, updateUser }
