@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 
-const userSchema = new Schema({
+const roomSchema = new Schema({
     active: { type: Boolean, default: true },
     roomId: { type: String, required: true },
     users: [
@@ -12,4 +12,6 @@ const userSchema = new Schema({
     ],
 })
 
-module.exports = model('User', userSchema)
+const roomModel = model('User', roomSchema)
+
+module.exports = roomModel
