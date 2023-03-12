@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Codemirror from "codemirror";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/dracula.css";
@@ -11,7 +11,7 @@ import ACTIONS from "../Actions";
 
 const Editor = ({ socketRef, roomId, username, onCodeChange }) => {
   const editorRef = useRef(null);
-  let writePerm = false;
+  const [writePerm, setWritePerm] = useState(false);
 
   const writePermission = async () => {
     const response = await axios.get(
@@ -25,19 +25,21 @@ const Editor = ({ socketRef, roomId, username, onCodeChange }) => {
     );
     if (response.data.success) {
       // eslint-disable-next-line react-hooks/exhaustive-deps, array-callback-return
-      response.data.data.map((user) => {
-        if (user.role === "0") {
-          writePerm = true;
-        }
-      });
+      if(response.data.data.role === "0") {
+        setWritePerm(true);
+      }else{
+        setWritePerm(false);
+      }
     }
-    console.log(writePerm);
-    return writePerm;
   };
 
   useEffect(() => {
+    writePermission();
+  }, []);
+
+  useEffect(() => {
     async function init() {
-      writePermission();
+      console.log(writePerm)
       editorRef.current = Codemirror.fromTextArea(
         document.getElementById("realtimeEditor"),
         {
@@ -63,7 +65,7 @@ const Editor = ({ socketRef, roomId, username, onCodeChange }) => {
       });
     }
     init();
-  }, []);
+  }, [writePerm]);
 
   useEffect(() => {
     if (socketRef.current) {
