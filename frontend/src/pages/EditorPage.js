@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import ACTIONS from '../Actions';
 import Client from '../components/Client';
+import axios from 'axios';
 import Editor from '../components/Editor';
 import { initSocket } from '../socket';
 import "../TailwindCSS/output.css";
@@ -20,6 +21,27 @@ const EditorPage = () => {
     const { roomId } = useParams();
     const reactNavigator = useNavigate();
     const [clients, setClients] = useState([]);
+    const [savePerm, setSavePerm] = useState(false);
+
+    const savePermission = async () => {
+        const response = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}/api/v1/user/getusers`,
+          {
+            params: {
+              roomId: roomId,
+              username: location.state?.username,
+            },
+          }
+        );
+        if (response.data.success) {
+          // eslint-disable-next-line react-hooks/exhaustive-deps, array-callback-return
+          if(response.data.data.role === "0") {
+              setSavePerm(true);
+          }else{
+              setSavePerm(false);
+          }
+        }
+      };
 
     useEffect(() => {
         const init = async () => {
@@ -66,6 +88,7 @@ const EditorPage = () => {
                 }
             );
         };
+        savePermission();
         init();
         return () => {
             socketRef.current.disconnect();
@@ -73,8 +96,8 @@ const EditorPage = () => {
             socketRef.current.off(ACTIONS.DISCONNECTED);
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
+    }, [socketRef,savePerm]);
+  
     async function copyRoomId() {
         try {
             await navigator.clipboard.writeText(roomId);
@@ -83,6 +106,15 @@ const EditorPage = () => {
             toast.error('Could not copy the Room ID');
             console.error(err);
         }
+    }
+
+    async function saveCode() {
+        console.log(codeRef.current)
+        socketRef.current.emit(ACTIONS.SAVE, {
+            code: codeRef.current,
+            roomId
+        });
+        toast.success(`File saved.`);
     }
 
     function leaveRoom() {
@@ -116,6 +148,11 @@ const EditorPage = () => {
                 <button className="font-medium hover:text-[#ec3360] transition-all duration-300" onClick={copyRoomId}>
                     Copy Room Id
                 </button>
+
+                <button className="btn leaveBtn" onClick={saveCode} disabled={!savePerm}>
+                    Save
+                </button>
+
                 <button className="btn leaveBtn" onClick={leaveRoom}>
                     Leave
                 </button>

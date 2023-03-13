@@ -1,5 +1,7 @@
 const ACTIONS = require('../utils/Actions')
-
+const fs = require('fs')
+const saveFileToS3 = require('../controllers/user/saveFileToS3')
+const getFileFromS3 = require('../controllers/user/getFileFromS3')
 const socketController = (io) => {
     const userSocketMap = {}
     function getAllConnectedClients(roomId) {
@@ -16,7 +18,8 @@ const socketController = (io) => {
     io.on('connection', (socket) => {
         console.log('socket connected', socket.id)
 
-        socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
+        socket.on(ACTIONS.JOIN, async ({ roomId, username }) => {
+            getFileFromS3(socket, roomId, username)
             userSocketMap[socket.id] = username
             socket.join(roomId)
             const clients = getAllConnectedClients(roomId)
@@ -35,6 +38,14 @@ const socketController = (io) => {
 
         socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {
             io.to(socketId).emit(ACTIONS.CODE_CHANGE, { code })
+        })
+        socket.on(ACTIONS.SAVE, ({ code, roomId }) => {
+            if (!code) code = ''
+            fs.writeFile(`../backend/code/${roomId}.txt`, code, (err) => {
+                if (err) throw err
+                console.log('The file has been saved!')
+            })
+            saveFileToS3(code, roomId)
         })
 
         socket.on('disconnecting', () => {
