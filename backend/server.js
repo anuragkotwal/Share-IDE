@@ -16,6 +16,12 @@ const server = http.createServer(app)
 const io = new Server(server)
 socket(io)
 
+app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    next()
+})
+
 process.on('uncaughtException', (err) => {
     logger.error(`Unhandled Exception - ${err.message}`, { err: err.stack })
 })
