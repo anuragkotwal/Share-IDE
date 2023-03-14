@@ -2,12 +2,12 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import "../TailwindCSS/output.css";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import shareIDE from "../../src/shareIDE.svg";
 
 const Home = () => {
   const navigate = useNavigate();
-
   const [roomId, setRoomId] = useState("");
   const [username, setUsername] = useState("");
   const createNewRoom = (e) => {
@@ -17,11 +17,22 @@ const Home = () => {
     toast.success("Created a new room");
   };
 
-  const joinRoom = () => {
+  const joinRoom = async () => {
     if (!roomId || !username) {
       toast.error("ROOM ID & username is required");
       return;
     }
+
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/user/save`,{
+      username,
+      roomId,
+    })
+
+    if(!response.data.success){
+      toast.error(response.data.message);
+      return;
+    }
+
 
     // Redirect
     navigate(`/${roomId}`, {
@@ -70,8 +81,7 @@ const Home = () => {
             />
             <button
               className="btn joinBtn text-[#ffffff] font-medium"
-              onClick={joinRoom}
-            >
+              onClick={joinRoom}>
               Join
             </button>
             <span className="createInfo font-normal text-[#30353E] text-sm">
