@@ -175,6 +175,12 @@ const EditorPage = () => {
                             <option value="elegant">Elegant</option>
                             <option value="twilight">Twilight</option>
                             <option value="vibrant-ink">Vibrant-ink</option>
+                            <option value="monokai">Monokai</option>
+                            <option value="midnight">Midnight</option>
+                            <option value="shadowfox">Shadowfox</option>
+                            <option value="seti">Seti</option>
+                            <option value="solarized">Solarized</option>
+
                         </select>
                     </div>
 
