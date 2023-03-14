@@ -608,6 +608,18 @@ video {
   margin-top: 3.5rem;
 }
 
+.ml-10 {
+  margin-left: 2.5rem;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+.block {
+  display: block;
+}
+
 .inline-block {
   display: inline-block;
 }
@@ -632,12 +644,40 @@ video {
   height: 3.5rem;
 }
 
+.h-4 {
+  height: 1rem;
+}
+
+.h-8 {
+  height: 2rem;
+}
+
+.h-7 {
+  height: 1.75rem;
+}
+
 .w-36 {
   width: 9rem;
 }
 
 .w-full {
   width: 100%;
+}
+
+.w-28 {
+  width: 7rem;
+}
+
+.w-44 {
+  width: 11rem;
+}
+
+.w-40 {
+  width: 10rem;
+}
+
+.w-56 {
+  width: 14rem;
 }
 
 .flex-col {
@@ -660,6 +700,18 @@ video {
   border-radius: 0.375rem;
 }
 
+.rounded {
+  border-radius: 0.25rem;
+}
+
+.rounded-sm {
+  border-radius: 0.125rem;
+}
+
+.rounded-xl {
+  border-radius: 0.75rem;
+}
+
 .bg-\[\#ec3360\] {
   --tw-bg-opacity: 1;
   background-color: rgb(236 51 96 / var(--tw-bg-opacity));
@@ -667,6 +719,52 @@ video {
 
 .bg-\[\#30353ed3\] {
   background-color: #30353ed3;
+}
+
+.bg-gray-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(107 114 128 / var(--tw-bg-opacity));
+}
+
+.bg-\[gray-500\] {
+  background-color: gray-500;
+}
+
+.bg-\[\#\] {
+  background-color: #;
+}
+
+.bg-\[\#\#30353E\] {
+  background-color: ##30353E;
+}
+
+.bg-\[\#30353E\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(48 53 62 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#30353E\]\/80 {
+  background-color: rgb(48 53 62 / 0.8);
+}
+
+.bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-\[white\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#303E30\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(48 62 48 / var(--tw-bg-opacity));
+}
+
+.bg-slate-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(241 245 249 / var(--tw-bg-opacity));
 }
 
 .pl-4 {
@@ -745,6 +843,28 @@ video {
 .text-\[\#9ea1a7\] {
   --tw-text-opacity: 1;
   color: rgb(158 161 167 / var(--tw-text-opacity));
+}
+
+.text-\[\#30353E\]\/80 {
+  color: rgb(48 53 62 / 0.8);
+}
+
+.text-slate-100 {
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity));
+}
+
+.outline-none {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.outline {
+  outline-style: solid;
+}
+
+.outline-1 {
+  outline-width: 1px;
 }
 
 .filter {

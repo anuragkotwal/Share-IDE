@@ -2,18 +2,31 @@
 import React, { useState, useEffect, useRef } from "react";
 import Codemirror from "codemirror";
 import "codemirror/lib/codemirror.css";
+
 import "codemirror/theme/dracula.css";
+import "codemirror/theme/3024-night.css";
+import "codemirror/theme/elegant.css";
+import "codemirror/theme/twilight.css";
+import "codemirror/theme/vibrant-ink.css";
+import "codemirror/theme/monokai.css";
+import "codemirror/theme/midnight.css";
+import "codemirror/theme/shadowfox.css";
+import "codemirror/theme/seti.css";
+import "codemirror/theme/solarized.css";
+
 import "codemirror/mode/javascript/javascript";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 import axios from "axios";
 import ACTIONS from "../Actions";
 
-const Editor = ({ socketRef, roomId, username, onCodeChange }) => {
+const Editor = ({ socketRef, roomId, username, themee, onCodeChange }) => {
   const editorRef = useRef(null);
   const [writePerm, setWritePerm] = useState(false);
+  let writePermission = false;
 
-  const writePermission = async () => {
+
+  useEffect(async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_BACKEND_URL}/api/v1/user/getusers`,
       {
@@ -27,28 +40,25 @@ const Editor = ({ socketRef, roomId, username, onCodeChange }) => {
       // eslint-disable-next-line react-hooks/exhaustive-deps, array-callback-return
       if(response.data.data.role === "0") {
         setWritePerm(true);
+        writePermission = true;
       }else{
         setWritePerm(false);
+        writePermission = false;
       }
     }
-  };
 
-  useEffect(() => {
-    writePermission();
-  }, []);
-
-  useEffect(() => {
     async function init() {
-      console.log(writePerm)
+      console.log(writePermission)
+      console.log(themee)
       editorRef.current = Codemirror.fromTextArea(
         document.getElementById("realtimeEditor"),
         {
           mode: { name: "javascript", json: true },
           autoCloseTags: true,
-          theme: "dracula",
+          theme: themee,
           autoCloseBrackets: true,
           lineNumbers: true,
-          readOnly: !writePerm,
+          readOnly: !writePermission,
         }
       );
 
@@ -65,7 +75,8 @@ const Editor = ({ socketRef, roomId, username, onCodeChange }) => {
       });
     }
     init();
-  }, [writePerm]);
+
+  }, [themee]);
 
   useEffect(() => {
     if (socketRef.current) {
