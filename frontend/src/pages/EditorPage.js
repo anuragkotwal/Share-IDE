@@ -23,6 +23,7 @@ const EditorPage = () => {
     const [clients, setClients] = useState([]);
     const [savePerm, setSavePerm] = useState(false);
     const [theme, setTheme] = useState("dracula");
+    let themeState = "dracula";
 
     const savePermission = async () => {
         const response = await axios.get(
@@ -131,7 +132,13 @@ const EditorPage = () => {
     function handleTheme(){
         let themeSelect = document.getElementById("theme");
         setTheme(themeSelect.value);
+        themeState = themeSelect.value;
+
+        let editorWindow = document.getElementById("realtimeEditor");
+        let themeCSS = `CodeMirror cm-s-${themeState}`;
+        editorWindow.nextSibling.setAttribute("class", themeCSS);
     }
+
 
     return (
         <div className="mainWrap">
@@ -166,10 +173,10 @@ const EditorPage = () => {
                 </button>
             </div>
             <div className="editorWrap">
-                <div className='h-8 flex bg-slate-100 rounded-xl '>
+                <div className='h-8 flex bg-slate-100 rounded-sm '>
                     <div className='ml-10 rounded-sm w-56 self-center flex'>
                         <span className='text-[#30353E]/80 font-medium block mr-2'>Theme</span>
-                        <select name="theme" id="theme" onChange={handleTheme} className='block h-7 bg-[#30353E]/80 outline-none rounded-md text-slate-100 w-56'>
+                        <select disabled={!savePerm} name="theme" id="theme" onChange={handleTheme} className='block h-7 bg-[#30353E]/80 outline-none rounded-md text-slate-100 w-56'>
                             <option value="dracula" selected>Dracula</option>
                             <option value="3024-night">3024-night</option>
                             <option value="elegant">Elegant</option>
@@ -189,7 +196,6 @@ const EditorPage = () => {
                     socketRef={socketRef}
                     roomId={roomId}
                     username={location.state?.username}
-                    themee={theme}
                     onCodeChange={(code) => {
                         codeRef.current = code;
                     }}

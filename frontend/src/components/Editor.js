@@ -20,11 +20,10 @@ import "codemirror/addon/edit/closebrackets";
 import axios from "axios";
 import ACTIONS from "../Actions";
 
-const Editor = ({ socketRef, roomId, username, themee, onCodeChange }) => {
+const Editor = ({ socketRef, roomId, username, onCodeChange }) => {
   const editorRef = useRef(null);
   const [writePerm, setWritePerm] = useState(false);
   let writePermission = false;
-
 
   useEffect(async () => {
     const response = await axios.get(
@@ -48,14 +47,12 @@ const Editor = ({ socketRef, roomId, username, themee, onCodeChange }) => {
     }
 
     async function init() {
-      console.log(writePermission)
-      console.log(themee)
       editorRef.current = Codemirror.fromTextArea(
         document.getElementById("realtimeEditor"),
         {
           mode: { name: "javascript", json: true },
           autoCloseTags: true,
-          theme: themee,
+          theme: "dracula",
           autoCloseBrackets: true,
           lineNumbers: true,
           readOnly: !writePermission,
@@ -76,7 +73,8 @@ const Editor = ({ socketRef, roomId, username, themee, onCodeChange }) => {
     }
     init();
 
-  }, [themee]);
+  }, []);
+  
 
   useEffect(() => {
     if (socketRef.current) {
