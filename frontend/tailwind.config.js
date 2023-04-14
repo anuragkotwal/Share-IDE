@@ -6,3 +6,8 @@ module.exports = {
   },
   plugins: [],
 }
+
+
+
+// Script to run TailwindCSS CLI tool for this project
+// npx tailwindcss -i ./src/tailwindCSS/Tailwind_Input.css -o ./src/tailwindCSS/Tailwind_Output.css --watch

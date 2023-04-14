@@ -22,6 +22,8 @@ const EditorPage = () => {
     const reactNavigator = useNavigate();
     const [clients, setClients] = useState([]);
     const [savePerm, setSavePerm] = useState(false);
+    const [theme, setTheme] = useState("dracula");
+    let themeState = "dracula";
 
     const savePermission = async () => {
         const response = await axios.get(
@@ -125,6 +127,19 @@ const EditorPage = () => {
         return <Navigate to="/" />;
     }
 
+
+
+    function handleTheme(){
+        let themeSelect = document.getElementById("theme");
+        setTheme(themeSelect.value);
+        themeState = themeSelect.value;
+
+        let editorWindow = document.getElementById("realtimeEditor");
+        let themeCSS = `CodeMirror cm-s-${themeState}`;
+        editorWindow.nextSibling.setAttribute("class", themeCSS);
+    }
+
+
     return (
         <div className="mainWrap">
             <div className="aside">
@@ -158,6 +173,25 @@ const EditorPage = () => {
                 </button>
             </div>
             <div className="editorWrap">
+                <div className='h-8 flex bg-slate-100 rounded-sm '>
+                    <div className='ml-10 rounded-sm w-56 self-center flex'>
+                        <span className='text-[#30353E]/80 font-medium block mr-2'>Theme</span>
+                        <select disabled={!savePerm} name="theme" id="theme" onChange={handleTheme} className='block h-7 bg-[#30353E]/80 outline-none rounded-md text-slate-100 w-56'>
+                            <option value="dracula" selected>Dracula</option>
+                            <option value="3024-night">3024-night</option>
+                            <option value="elegant">Elegant</option>
+                            <option value="twilight">Twilight</option>
+                            <option value="vibrant-ink">Vibrant-ink</option>
+                            <option value="monokai">Monokai</option>
+                            <option value="midnight">Midnight</option>
+                            <option value="shadowfox">Shadowfox</option>
+                            <option value="seti">Seti</option>
+                            <option value="solarized">Solarized</option>
+
+                        </select>
+                    </div>
+
+                </div>
                 <Editor
                     socketRef={socketRef}
                     roomId={roomId}
