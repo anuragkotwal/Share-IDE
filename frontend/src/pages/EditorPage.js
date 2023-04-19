@@ -111,7 +111,6 @@ const EditorPage = () => {
     }
 
     async function saveCode() {
-        console.log(codeRef.current)
         socketRef.current.emit(ACTIONS.SAVE, {
             code: codeRef.current,
             roomId
@@ -128,6 +127,73 @@ const EditorPage = () => {
     }
 
 
+    const inputClicked = () => {
+        const inputArea = document.getElementById("input");
+        inputArea.placeholder = "Enter your input here";
+        inputArea.value = "";
+        inputArea.disabled = false;
+        const inputLabel = document.getElementById("inputLabel");
+        const outputLabel = document.getElementById("outputLabel");
+        inputLabel.classList.remove("notClickedLabel");
+        inputLabel.classList.add("clickedLabel");
+        outputLabel.classList.remove("clickedLabel");
+        outputLabel.classList.add("notClickedLabel");
+      };
+    
+      const outputClicked = () => {
+        const inputArea = document.getElementById("input");
+        inputArea.placeholder =
+          "You output will apear here, Click 'Run code' to see it";
+        inputArea.value = "";
+        inputArea.disabled = true;
+        const inputLabel = document.getElementById("inputLabel");
+        const outputLabel = document.getElementById("outputLabel");
+        inputLabel.classList.remove("clickedLabel");
+        inputLabel.classList.add("notClickedLabel");
+        outputLabel.classList.remove("notClickedLabel");
+        outputLabel.classList.add("clickedLabel");
+      };
+
+
+      const runCode = () => {
+        const input = document.getElementById("input").value || '';
+        const code = codeRef.current;
+        let languageSelect = document.getElementById("language")
+        toast.loading("Running Code....");
+        const data={
+            'code':code,
+            'language':languageSelect.value,
+            'input':input,
+        }
+    
+        const options = {
+          method: 'POST',
+          url: 'https://api.codex.jaagrav.in',
+          data: data,
+        };    
+        axios
+          .request(options)
+          .then(function (response) {
+            if(response.data.error !== "")
+            {
+                toast.dismiss();
+                toast.error("Code compilation unsuccessful");
+                document.getElementById("input").value = response.data.error;
+            }
+            else if(response.data.output !== "")
+            {
+                toast.dismiss();
+                toast.success("Code compiled successfully");
+                document.getElementById("input").value = response.data.output;
+            }
+          })
+          .catch(function (error) {
+            toast.dismiss();
+            toast.error("Code compilation unsuccessful");
+            document.getElementById("input").value =
+              "Something went wrong, Please check your code and input.";
+          });
+      };
 
     function handleTheme(){
         let themeSelect = document.getElementById("theme");
@@ -160,8 +226,45 @@ const EditorPage = () => {
                     </div>
                 </div>
 
-                <button className="font-medium hover:text-[#ec3360] transition-all duration-300" onClick={copyRoomId}>
+                <div className='h-8 flex rounded-sm '>
+                    <div className='rounded-sm w-30 self-center flex'>
+                    <span className='font-medium block mr-2'>Theme</span>
+                        <select disabled={!savePerm} name="theme" id="theme" onChange={handleTheme} className='block h-7 bg-[#30353E]/80 outline-none rounded-md text-slate-100 w-30'>
+                            <option value="dracula" selected>Dracula</option>
+                            <option value="3024-night">3024-night</option>
+                            <option value="elegant">Elegant</option>
+                            <option value="twilight">Twilight</option>
+                            <option value="vibrant-ink">Vibrant-ink</option>
+                            <option value="monokai">Monokai</option>
+                            <option value="midnight">Midnight</option>
+                            <option value="shadowfox">Shadowfox</option>
+                            <option value="seti">Seti</option>
+                            <option value="solarized">Solarized</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div className='h-8 flex rounded-sm'>
+                    <div className='rounded-sm w-30 self-center flex'>
+                    <span className='font-medium block mr-2'>Language</span>
+                        <select disabled={!savePerm} name="language" id="language" className='block h-7 bg-[#30353E]/80 outline-none rounded-md text-slate-100 w-30'>
+                            <option value="cs">C#</option>
+                            <option value="java">Java</option>
+                            <option value="py">Python</option>
+                            <option value="c">C (gcc)</option>
+                            <option value="cpp" selected>C++ (gcc)</option>
+                            <option value="js">JavaScript</option>
+                            <option value="go">GoLang</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button className="font-medium hover:text-[#ec3360] transition-all duration-300 mt-8" onClick={copyRoomId}>
                     Copy Room Id
+                </button>   
+
+                <button className="btn leaveBtn" onClick={runCode} disabled={!savePerm}>
+                    Run Code
                 </button>
 
                 <button className="btn leaveBtn" onClick={saveCode} disabled={!savePerm}>
@@ -173,25 +276,6 @@ const EditorPage = () => {
                 </button>
             </div>
             <div className="editorWrap">
-                <div className='h-8 flex bg-slate-100 rounded-sm '>
-                    <div className='ml-10 rounded-sm w-56 self-center flex'>
-                        <span className='text-[#30353E]/80 font-medium block mr-2'>Theme</span>
-                        <select disabled={!savePerm} name="theme" id="theme" onChange={handleTheme} className='block h-7 bg-[#30353E]/80 outline-none rounded-md text-slate-100 w-56'>
-                            <option value="dracula" selected>Dracula</option>
-                            <option value="3024-night">3024-night</option>
-                            <option value="elegant">Elegant</option>
-                            <option value="twilight">Twilight</option>
-                            <option value="vibrant-ink">Vibrant-ink</option>
-                            <option value="monokai">Monokai</option>
-                            <option value="midnight">Midnight</option>
-                            <option value="shadowfox">Shadowfox</option>
-                            <option value="seti">Seti</option>
-                            <option value="solarized">Solarized</option>
-
-                        </select>
-                    </div>
-
-                </div>
                 <Editor
                     socketRef={socketRef}
                     roomId={roomId}
@@ -200,6 +284,27 @@ const EditorPage = () => {
                         codeRef.current = code;
                     }}
                 />
+                <div className="IO-container">
+                    <label
+                        id="inputLabel"
+                        className="clickedLabel"
+                        onClick={inputClicked}
+                    >
+                        Input
+                    </label>
+                    <label
+                        id="outputLabel"
+                        className="notClickedLabel"
+                        onClick={outputClicked}
+                    >
+                        Output
+                    </label>
+                </div>
+                <textarea
+                    id="input"
+                    className="inputArea textarea-style"
+                    placeholder="Enter your input here"
+                ></textarea>
             </div>
         </div>
     );
