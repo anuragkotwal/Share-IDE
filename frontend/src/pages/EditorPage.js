@@ -127,33 +127,6 @@ const EditorPage = () => {
     }
 
 
-    const inputClicked = () => {
-        const inputArea = document.getElementById("input");
-        inputArea.placeholder = "Enter your input here";
-        inputArea.value = "";
-        inputArea.disabled = false;
-        const inputLabel = document.getElementById("inputLabel");
-        const outputLabel = document.getElementById("outputLabel");
-        inputLabel.classList.remove("notClickedLabel");
-        inputLabel.classList.add("clickedLabel");
-        outputLabel.classList.remove("clickedLabel");
-        outputLabel.classList.add("notClickedLabel");
-      };
-    
-      const outputClicked = () => {
-        const inputArea = document.getElementById("input");
-        inputArea.placeholder =
-          "You output will apear here, Click 'Run code' to see it";
-        inputArea.value = "";
-        inputArea.disabled = true;
-        const inputLabel = document.getElementById("inputLabel");
-        const outputLabel = document.getElementById("outputLabel");
-        inputLabel.classList.remove("clickedLabel");
-        inputLabel.classList.add("notClickedLabel");
-        outputLabel.classList.remove("notClickedLabel");
-        outputLabel.classList.add("clickedLabel");
-      };
-
 
       const runCode = () => {
         const input = document.getElementById("input").value || '';
@@ -178,19 +151,19 @@ const EditorPage = () => {
             {
                 toast.dismiss();
                 toast.error("Code compilation unsuccessful");
-                document.getElementById("input").value = response.data.error;
+                document.getElementById("output").value = response.data.error;
             }
             else if(response.data.output !== "")
             {
                 toast.dismiss();
                 toast.success("Code compiled successfully");
-                document.getElementById("input").value = response.data.output;
+                document.getElementById("output").value = response.data.output;
             }
           })
           .catch(function (error) {
             toast.dismiss();
             toast.error("Code compilation unsuccessful");
-            document.getElementById("input").value =
+            document.getElementById("output").value =
               "Something went wrong, Please check your code and input.";
           });
       };
@@ -229,7 +202,7 @@ const EditorPage = () => {
                 <div className='h-8 flex rounded-sm '>
                     <div className='rounded-sm w-30 self-center flex'>
                     <span className='font-medium block mr-2'>Theme</span>
-                        <select disabled={!savePerm} name="theme" id="theme" onChange={handleTheme} className='block h-7 bg-[#30353E]/80 outline-none rounded-md text-slate-100 w-30'>
+                        <select disabled={!savePerm} name="theme" id="theme" onChange={handleTheme} className=' ml-6 block h-7 bg-[#30353E]/80 outline-none rounded-md text-slate-100 w-30'>
                             <option value="dracula" selected>Dracula</option>
                             <option value="3024-night">3024-night</option>
                             <option value="elegant">Elegant</option>
@@ -247,7 +220,7 @@ const EditorPage = () => {
                 <div className='h-8 flex rounded-sm'>
                     <div className='rounded-sm w-30 self-center flex'>
                     <span className='font-medium block mr-2'>Language</span>
-                        <select disabled={!savePerm} name="language" id="language" className='block h-7 bg-[#30353E]/80 outline-none rounded-md text-slate-100 w-30'>
+                        <select disabled={!savePerm} name="language" id="language" className='block h-7 bg-[#30353E]/80 outline-none rounded-md text-slate-100 w-[7rem]'>
                             <option value="cs">C#</option>
                             <option value="java">Java</option>
                             <option value="py">Python</option>
@@ -263,7 +236,7 @@ const EditorPage = () => {
                     Copy Room Id
                 </button>   
 
-                <button className="btn leaveBtn" onClick={runCode} disabled={!savePerm}>
+                <button className="btn leaveBtn bg-[#1d9e62] hover:bg-[#198754]" onClick={runCode} disabled={!savePerm}>
                     Run Code
                 </button>
 
@@ -275,36 +248,45 @@ const EditorPage = () => {
                     Leave
                 </button>
             </div>
-            <div className="editorWrap">
-                <Editor
-                    socketRef={socketRef}
-                    roomId={roomId}
-                    username={location.state?.username}
-                    onCodeChange={(code) => {
-                        codeRef.current = code;
-                    }}
-                />
-                <div className="IO-container">
-                    <label
-                        id="inputLabel"
-                        className="clickedLabel"
-                        onClick={inputClicked}
-                    >
-                        Input
-                    </label>
-                    <label
-                        id="outputLabel"
-                        className="notClickedLabel"
-                        onClick={outputClicked}
-                    >
-                        Output
-                    </label>
+            <div className="">
+                <div className=''>
+                    <Editor
+                        socketRef={socketRef}
+                        roomId={roomId}
+                        username={location.state?.username}
+                        onCodeChange={(code) => {
+                            codeRef.current = code;
+                        }}
+                    />
                 </div>
-                <textarea
-                    id="input"
-                    className="inputArea textarea-style"
-                    placeholder="Enter your input here"
-                ></textarea>
+
+                <div className=' w-auto h-[18vh] bg-[#384862] IO-container flex'>
+                    <div className="input_area flex-row w-1/2">
+                        <label id="inputLabel" className='text-[#F7F7F7] ml-2'>
+                            Input
+                        </label>
+
+                        <textarea
+                        id="input"
+                        className="inputArea p-2 h-[14vh] rounded-md textarea-style block w-full bg-[#F7F7F7] outline-none text-[#282A36]"
+                        placeholder="Enter your input here"
+                        ></textarea>
+                    </div>
+
+                    <div className="output_area flex-row  w-1/2 border-l-[#384862] border-l-4">
+                        <label id="outputLabel" className='text-[#F7F7F7] ml-2'>
+                            Output
+                        </label>
+
+                        <textarea
+                        readOnly
+                        id="output"
+                        className="outputArea p-2 h-[14vh] rounded-md textarea-style block w-full bg-[#F7F7F7] outline-none bor"
+                        placeholder="Output will reflect here"
+                        ></textarea>
+                    </div>
+                </div>
+
             </div>
         </div>
     );
