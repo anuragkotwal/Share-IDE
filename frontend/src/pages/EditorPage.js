@@ -229,7 +229,7 @@ const EditorPage = () => {
                 <div className='h-8 flex rounded-sm '>
                     <div className='rounded-sm w-30 self-center flex'>
                     <span className='font-medium block mr-2'>Theme</span>
-                        <select disabled={!savePerm} name="theme" id="theme" onChange={handleTheme} className='block h-7 bg-[#30353E]/80 outline-none rounded-md text-slate-100 w-30'>
+                        <select disabled={!savePerm} name="theme" id="theme" onChange={handleTheme} className=' ml-6 block h-7 bg-[#30353E]/80 outline-none rounded-md text-slate-100 w-30'>
                             <option value="dracula" selected>Dracula</option>
                             <option value="3024-night">3024-night</option>
                             <option value="elegant">Elegant</option>
@@ -247,7 +247,7 @@ const EditorPage = () => {
                 <div className='h-8 flex rounded-sm'>
                     <div className='rounded-sm w-30 self-center flex'>
                     <span className='font-medium block mr-2'>Language</span>
-                        <select disabled={!savePerm} name="language" id="language" className='block h-7 bg-[#30353E]/80 outline-none rounded-md text-slate-100 w-30'>
+                        <select disabled={!savePerm} name="language" id="language" className='block h-7 bg-[#30353E]/80 outline-none rounded-md text-slate-100 w-[7rem]'>
                             <option value="cs">C#</option>
                             <option value="java">Java</option>
                             <option value="py">Python</option>
@@ -263,7 +263,7 @@ const EditorPage = () => {
                     Copy Room Id
                 </button>   
 
-                <button className="btn leaveBtn" onClick={runCode} disabled={!savePerm}>
+                <button className="btn leaveBtn bg-[#1d9e62] hover:bg-[#198754]" onClick={runCode} disabled={!savePerm}>
                     Run Code
                 </button>
 
@@ -275,36 +275,42 @@ const EditorPage = () => {
                     Leave
                 </button>
             </div>
-            <div className="editorWrap">
-                <Editor
-                    socketRef={socketRef}
-                    roomId={roomId}
-                    username={location.state?.username}
-                    onCodeChange={(code) => {
-                        codeRef.current = code;
-                    }}
-                />
-                <div className="IO-container">
-                    <label
-                        id="inputLabel"
-                        className="clickedLabel"
-                        onClick={inputClicked}
-                    >
-                        Input
-                    </label>
-                    <label
-                        id="outputLabel"
-                        className="notClickedLabel"
-                        onClick={outputClicked}
-                    >
-                        Output
-                    </label>
+            <div className="">
+                <div className=''>
+                    <Editor
+                        socketRef={socketRef}
+                        roomId={roomId}
+                        username={location.state?.username}
+                        onCodeChange={(code) => {
+                            codeRef.current = code;
+                        }}
+                    />
                 </div>
-                <textarea
-                    id="input"
-                    className="inputArea textarea-style"
-                    placeholder="Enter your input here"
-                ></textarea>
+
+                <div className=' w-auto bg-red-500'>
+                    <div className="IO-container">
+                        <label
+                            id="inputLabel"
+                            className="clickedLabel"
+                            onClick={inputClicked}
+                        >
+                            Input
+                        </label>
+                        <label
+                            id="outputLabel"
+                            className="notClickedLabel"
+                            onClick={outputClicked}
+                        >
+                            Output
+                        </label>
+                    </div>
+                    <textarea
+                        id="input"
+                        className="inputArea textarea-style"
+                        placeholder="Enter your input here"
+                    ></textarea>
+                </div>
+
             </div>
         </div>
     );
