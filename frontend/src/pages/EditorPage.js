@@ -13,6 +13,7 @@ import {
     Navigate,
     useParams,
 } from 'react-router-dom';
+import Chat from "../components/Chat"
 
 const EditorPage = () => {
     const socketRef = useRef(null);
@@ -180,7 +181,9 @@ const EditorPage = () => {
 
 
     return (
+        
         <div className="mainWrap">
+
             <div className="aside">
                 <div className="asideInner">
                     <div className="logo flex">
@@ -247,6 +250,7 @@ const EditorPage = () => {
                 <button className="btn leaveBtn" onClick={leaveRoom}>
                     Leave
                 </button>
+
             </div>
             <div className="">
                 <div className=''>
@@ -287,7 +291,9 @@ const EditorPage = () => {
                     </div>
                 </div>
 
+
             </div>
+            <Chat></Chat>
         </div>
     );
 };
