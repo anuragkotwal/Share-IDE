@@ -2,6 +2,7 @@ const ACTIONS = require('../utils/Actions')
 const fs = require('fs')
 const saveFileToS3 = require('../controllers/user/saveFileToS3')
 const getFileFromS3 = require('../controllers/user/getFileFromS3')
+const { generatedMsg } = require('../utils/msg')
 const socketController = (io) => {
     const userSocketMap = {}
     function getAllConnectedClients(roomId) {
@@ -30,6 +31,11 @@ const socketController = (io) => {
                     socketId: socket.id,
                 })
             })
+        })
+        socket.on(ACTIONS.SENDMESSAGE, async (msgObj) => {
+            msgObj.username = msgObj.username.charAt(0).toUpperCase() + msgObj.username.slice(1)
+            const msg = generatedMsg(msgObj.msg, msgObj.username)
+            io.to(msgObj.roomId).emit(ACTIONS.MESSAGE, msg)
         })
 
         socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {

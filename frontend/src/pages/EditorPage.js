@@ -194,6 +194,7 @@ const EditorPage = () => {
                     <h3 className='mt-1 mb-2 font-medium text-base'>Connected</h3>
                     <div className="clientsList">
                         {clients.map((client) => (
+                            client.username = client.username[0].toUpperCase() + client.username.slice(1),
                             <Client
                                 key={client.socketId}
                                 username={client.username}
@@ -290,10 +291,11 @@ const EditorPage = () => {
                         ></textarea>
                     </div>
                 </div>
-
-
             </div>
-            <Chat></Chat>
+            <Chat socket={socketRef}
+                roomId={roomId}
+                username={location.state?.username}
+            ></Chat>
         </div>
     );
 };
