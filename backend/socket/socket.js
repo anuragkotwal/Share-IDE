@@ -33,9 +33,9 @@ const socketController = (io) => {
             })
         })
         socket.on(ACTIONS.SENDMESSAGE, async (msgObj) => {
-            console.log(msgObj)
             msgObj.username = msgObj.username.charAt(0).toUpperCase() + msgObj.username.slice(1)
-            io.to(msgObj.roomId).emit(ACTIONS.MESSAGE, generatedMsg(msgObj.message, msgObj.username))
+            const msg = generatedMsg(msgObj.msg, msgObj.username)
+            io.to(msgObj.roomId).emit(ACTIONS.MESSAGE, msg)
         })
 
         socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {

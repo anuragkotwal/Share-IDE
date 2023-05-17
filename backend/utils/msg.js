@@ -1,8 +1,8 @@
 const generatedMsg = (text, username) => {
     return {
         username,
-        text,
-        createdAt: new Date().getTime(),
+        msg: text,
+        createdAt: new Date(),
     }
 }
 
